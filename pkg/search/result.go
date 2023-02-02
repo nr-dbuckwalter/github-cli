@@ -72,6 +72,15 @@ var PullRequestFields = append(IssueFields,
 	"isDraft",
 )
 
+var CodeFields = []string{
+	"name",
+	"path",
+	"respoitory",
+	"score",
+	"sha",
+	"url",
+}
+
 type CommitsResult struct {
 	IncompleteResults bool     `json:"incomplete_results"`
 	Items             []Commit `json:"items"`
@@ -88,6 +97,21 @@ type IssuesResult struct {
 	IncompleteResults bool    `json:"incomplete_results"`
 	Items             []Issue `json:"items"`
 	Total             int     `json:"total_count"`
+}
+
+type CodeResult struct {
+	IncompleteResults bool   `json:"incomplete_results"`
+	Items             []Code `json:"items"`
+	Total             int    `json:"total_count"`
+}
+
+type Code struct {
+	Name  string     `json:"name"`
+	Path  string     `json:"path"`
+	Repo  Repository `json:"repository"`
+	Score string     `json:"score"`
+	Sha   string     `json:"sha"`
+	URL   string     `json:"html_url"`
 }
 
 type Commit struct {

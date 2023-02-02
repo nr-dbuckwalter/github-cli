@@ -12,6 +12,7 @@ const (
 	KindRepositories = "repositories"
 	KindIssues       = "issues"
 	KindCommits      = "commits"
+	KindCode         = "code"
 )
 
 type Query struct {

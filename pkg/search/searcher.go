@@ -28,6 +28,7 @@ type Searcher interface {
 	Commits(Query) (CommitsResult, error)
 	Repositories(Query) (RepositoriesResult, error)
 	Issues(Query) (IssuesResult, error)
+	Code(Query) (CodeResult, error)
 	URL(Query) string
 }
 
@@ -117,6 +118,30 @@ func (s searcher) Issues(query Query) (IssuesResult, error) {
 			break
 		}
 		page := IssuesResult{}
+		resp, err = s.search(query, &page)
+		if err != nil {
+			return result, err
+		}
+		result.IncompleteResults = page.IncompleteResults
+		result.Total = page.Total
+		result.Items = append(result.Items, page.Items...)
+		toRetrieve = toRetrieve - len(page.Items)
+	}
+	return result, nil
+}
+
+func (s searcher) Code(query Query) (CodeResult, error) {
+	result := CodeResult{}
+	toRetrieve := query.Limit
+	var resp *http.Response
+	var err error
+	for toRetrieve > 0 {
+		query.Limit = min(toRetrieve, maxPerPage)
+		query.Page = nextPage(resp)
+		if query.Page == 0 {
+			break
+		}
+		page := CodeResult{}
 		resp, err = s.search(query, &page)
 		if err != nil {
 			return result, err
